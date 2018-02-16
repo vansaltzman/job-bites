@@ -1,0 +1,19 @@
+{
+  "name": "job_search_priorities",
+  "version": "1.0.0",
+  "description": "Find the best food near your job!",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "react-dev": "webpack -d -w",
+    "server-dev": "nodemon main.js"
+  },
+  "author": "Riley Alsman",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "express": "^4.16.2",
+    "nodemon": "^1.15.0",
+    "path": "^0.12.7"
+  }
+}

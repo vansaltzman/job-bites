@@ -1,0 +1,1 @@
+//Mongodb Shema for storing favs
