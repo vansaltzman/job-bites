@@ -4,12 +4,15 @@ import axios from 'axios';
 import List from './List.jsx'
 import Search from './Search.jsx'
 import Foods from './FoodsItem.jsx'
+import FavList from './FavList.jsx'
+import FavListItem from './FavListItem.jsx'
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
       jobs: [],
+      favs: [],
       foods: [],
       favView: false
      }
@@ -17,19 +20,32 @@ class App extends React.Component {
      this.searchDb = this.searchDb.bind(this)
      this.getFavs = this.getFavs.bind(this)
      this.getFoods = this.getFoods.bind(this)
+     this.favTabHandler = this.favTabHandler.bind(this)
   }
 
-  favTabHandler() {
-    this.setState({favView: true},
-    this.getFavs())
+  componentDidMount() {
+    this.getFavs()
+      .then((favs)=> this.setState({favs: favs.data}))
+  }
+
+  favTabHandler(val) {
+    if (val) {
+      this.getFavs()
+        .then(()=> this.setState({favView: val}))
+    }
+
+    else {
+      this.setState({favView: val})
+    }
   }
 
   favHandler(job) {
     axios.post('/favs', {job: job})
       .then(() => {
         if(this.state.favView) {
-          getFavs()
+          this.getFavs()
             .then((favs)=> {
+              console.log(favs)
               this.setState({jobs: favs.data})
             })
           }
@@ -51,7 +67,7 @@ class App extends React.Component {
   }
 
   getFoods(job) {
-    axios.get('/foods', {
+    return axios.get('/foods', {
       params: {
         job: job
       }
@@ -62,15 +78,16 @@ class App extends React.Component {
   }
 
   getFavs() {
-    axios.get('/favs') 
+    return axios.get('/favs') 
   }
 
   render() { 
     if (!this.state.favView) {
       return ( 
         <div>
-          <button onClick={this.favHandler}>Search</button>
-          <button onClick={this.favHandler}>Favs</button>
+          <h1>SEARCH</h1>
+          <button onClick={()=> this.favTabHandler(false)}>Search</button>
+          <button onClick={()=> this.favTabHandler(true)}>Favs</button>
           <Search searchDb={this.searchDb}/>
           <pre>{JSON.stringify(this.state.jobs)}</pre>
           <pre>{JSON.stringify(this.state.foods)}</pre>
@@ -78,14 +95,18 @@ class App extends React.Component {
           <Foods foods={this.state.foods}/>
         </div>
        )
+
     } else if (this.state.favView) {
       return ( 
         <div>
-          {/* navigation bar */}
+          <h1>FAVS</h1>
+          <button onClick={()=> this.favTabHandler(false)}>Search</button>
+          <button onClick={()=> this.favTabHandler(true)}>Favs</button>
           <Search searchDb={this.searchDb}/>
-          <pre>{JSON.stringify(this.state.jobs)}</pre>
+          {console.log(this.state.favs.data)}
+          <pre>{JSON.stringify(this.state.favs)}</pre>
           <pre>{JSON.stringify(this.state.foods)}</pre>
-          <List jobs={this.state.jobs} favHandler={this.favHandler} getFoods={this.getFoods}/>
+          <FavList jobs={this.state.favs} favHandler={this.favHandler} getFoods={this.getFoods}/>
         </div>
        )
     }
