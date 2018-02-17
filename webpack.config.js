@@ -1,11 +1,13 @@
 var path = require('path');
-var SOURCE_DIR = path.join(__dirname, '/src');
-var DISTRIBUTION = path.join(__dirname, 'distribution')
+var SOURCE_DIR = path.join(__dirname, './src');
+var DISTRIBUTION = path.join(__dirname, './distribution')
+
+console.log(SOURCE_DIR)
 
 module.exports = {
   entry: `${SOURCE_DIR}/App.jsx`,
   output: {
-    filename: bundle.js,
+    filename: 'bundle.js',
     path: DISTRIBUTION
   },
   module :{

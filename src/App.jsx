@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import axios from 'axios';
-import List from ''
-import Search from ''
+import List from './List.jsx'
+import Search from './Search.jsx'
 
-class App extends Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      jobs: [],
+      jobs: []
      }
      this.favHandler
      this.searchDb
@@ -39,5 +39,6 @@ class App extends Component {
      )
   }
 }
+
+ReactDOM.render(<App />, document.getElementById('app'))
  
-export default App;

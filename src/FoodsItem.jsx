@@ -1,7 +1,6 @@
 import React from 'react'
 
-const FoodsItem = ({foods}) => {
-  return 
+const FoodsItem = ({foods}) => (
   <div>
     <ul>
     {foods.map((food)=> {
@@ -11,8 +10,8 @@ const FoodsItem = ({foods}) => {
         <span>{food.distance}</span>
       </li>
       })}
-      </ul>
+    </ul>
   </div>
-}
+)
  
 export default FoodsItem;
