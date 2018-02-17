@@ -1,6 +1,7 @@
 const axios = require('axios')
 // const {GOOGLE, YELP} = require('./config.js')
-let GOOGLE, YELP;
+let GOOGLE = {}
+let YELP = {}
 GOOGLE.DIRECTOINS = process.env.GOOG_DIR
 GOOGLE.GEO = process.env.GOOG_GEO
 YELP.KEY = process.env.YELP
