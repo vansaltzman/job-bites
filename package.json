@@ -4,6 +4,7 @@
   "description": "Find the best food near your job!",
   "main": "main.js",
   "scripts": {
+    "start": "node main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon main.js"
