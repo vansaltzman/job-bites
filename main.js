@@ -3,6 +3,7 @@ const express = require('express')
 const path = require('path')
 const bodyparser = require('body-parser')
 const api = require('./apiHelpers')
+const db = require('./favsDb')
 const url = require('url')
 
 
@@ -31,14 +32,34 @@ app.get('/foods', (req, res) => {
   .then((job) => {
     res.send(job.foods)
   })
+  .catch((job)=> {
+    res.send(job.foods)
+  })
 })
 
 app.get('/favs', (req, res) => {
-
+  db.getFavs()
+  .then((favs)=> {
+    res.send(favs)
+  })
 })
 
 app.post('/favs', (req, res) => {
+  api.getFoods(req.body.job)
+    .then((decoratedJob)=> {
+      db.save(decoratedJob)
+    })
+    .then(()=> {
+      res.sendStatus(201)
+    })
+})
 
+app.delete('/favs', (req, res) => {
+  console.log(req.query)
+  db.remove(req.query.id)
+    .then(()=> {
+      res.sendStatus(202)
+    })
 })
 
 

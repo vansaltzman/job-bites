@@ -13,11 +13,12 @@ exports.gitHub = (location, keywords, isFulltime) => {
 }
 
 exports.googleDirections = (companyName, city) => {
+  let justCity = city ? city.toLowerCase().replace('remote', '') : null
   return axios.get('https://maps.googleapis.com/maps/api/directions/json', {
     params: {
       key: GOOGLE.DIRECTOINS,
-      origin: `${companyName}  ${city}`,
-      destination: `${companyName}  ${city}`
+      origin: `${companyName}  ${justCity}`,
+      destination: `${companyName}  ${justCity}`
     }
   })
 }
@@ -40,7 +41,7 @@ exports.yelp = (longitude, latitude) => {
       longitude: longitude,
       latitude: latitude,
       term: 'food',
-      radius: 200,
+      radius: 500,
       sort_by: 'rating',
       limit: 5
     }
@@ -50,18 +51,24 @@ exports.yelp = (longitude, latitude) => {
 }
 
 exports.getFoods = (job) => {
+  if(typeof job === 'string') job = JSON.parse(job)
+  console.log('City/Company: ', job.company, job.location)
   return exports.googleDirections(job.company, job.location)
   .then((loc)=> {
+    console.log('PlaceID: ', loc.data.geocoded_waypoints[0].place_id)
     return exports.googleGeocoder(loc.data.geocoded_waypoints[0].place_id)
   })
   .then((place)=> {
     let location = place.data.results[0].geometry.location
+    console.log('Location: ', location)
     return exports.yelp(location.lng, location.lat)
   })
   .then((foods)=> {
-    return Object.assign({foods: foods.data.businesses}, JSON.parse(job))
+    console.log('Foods: ', foods.data.businesses.length)
+    return Object.assign({foods: foods.data.businesses}, job)
   })
   .catch((err)=> {
-    console.log(err)
+    console.log('ERROR')
+    return Object.assign({foods: [{id: 0, title:'No Location Data Available'}]}, job)
   })
 }

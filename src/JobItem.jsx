@@ -3,8 +3,8 @@ import React from 'react'
 const JobItem = ({job, favHandler, getFoods}) => {
   return (
   <li>
-    <div onClick={(e)=>favHandler(e)}>
-      {/* favorite */}
+    <div onClick={(e)=>favHandler(job)}>
+      Fav
     </div>
     <span>{job.title}</span>
     <span>{job.company}</span>
