@@ -25,7 +25,6 @@ const FoodsItem = ({foods}) =>
                       <td scope="row"> <a href={food.url}>Url</a> </td>
                     </tr>})}
           </tbody>
-        
       </table> 
       
       )

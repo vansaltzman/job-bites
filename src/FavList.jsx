@@ -3,7 +3,7 @@ import FavListItem from './FavListItem.jsx'
 
 const FavList = ({jobs, favHandler, getFoods}) => {
   return (
-    <ul>
+    <div class="container">
         {jobs.map((job, i)=> {
         return <FavListItem 
           favHandler={favHandler} 
@@ -12,7 +12,7 @@ const FavList = ({jobs, favHandler, getFoods}) => {
           key={job.id}
         />})
       }
-    </ul>
+    </div>
   )
 }
  

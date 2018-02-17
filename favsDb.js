@@ -1,4 +1,3 @@
-//Mongodb Shema for storing favs
 const mongoose = require('mongoose')
 
 let urlstring = process.env.MONGOLAB || 'mongodb://localhost/jobbites';

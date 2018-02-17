@@ -51,7 +51,6 @@ class App extends React.Component {
         if(this.state.favView) {
           this.getFavs()
             .then((favs)=> {
-              console.log(favs)
               this.setState({favs: favs.data})
             })
           }
@@ -63,7 +62,6 @@ class App extends React.Component {
           if(this.state.favView) {
             this.getFavs()
               .then((favs)=> {
-                console.log(favs)
                 this.setState({favs: favs.data})
               })
             }
@@ -104,9 +102,16 @@ class App extends React.Component {
     if (!this.state.favView) {
       return ( 
 <div>
-<nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
 <a className="navbar-brand">SEARCH</a>
-<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+<button 
+  className="navbar-toggler" 
+  type="button" 
+  data-toggle="collapse" 
+  data-target="#navbarColor01" 
+  aria-controls="navbarColor01" 
+  aria-expanded="false" 
+  aria-label="Toggle navigation">
   <span className="navbar-toggler-icon"></span>
 </button>
 
@@ -129,9 +134,13 @@ class App extends React.Component {
 </div>
 </nav>
 <div class="container">
-<div class="row">
- <List jobs={this.state.jobs} favHandler={this.favHandler} getFoods={this.getFoods}/>
-<div class="col">
+<div class="row" style={{paddingTop: '75px'}}>
+ <List 
+  jobs={this.state.jobs} 
+  favHandler={this.favHandler} 
+  getFoods={this.getFoods}
+/>
+<div class="col-7">
  {this.state.jobs.length > 0 ? <Foods foods={this.state.foods}/> : <div></div>}
 </div>
 </div>
@@ -142,9 +151,16 @@ class App extends React.Component {
     } else if (this.state.favView) {
       return ( 
 <div>
-<nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
 <a className="navbar-brand">FAVS</a>
-<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+<button 
+  className="navbar-toggler" 
+  type="button" 
+  data-toggle="collapse" 
+  data-target="#navbarColor01" 
+  aria-controls="navbarColor01" 
+  aria-expanded="false" 
+  aria-label="Toggle navigation">
   <span className="navbar-toggler-icon"></span>
 </button>
 
@@ -166,8 +182,12 @@ class App extends React.Component {
   <Search searchDb={this.searchDb}/>
 </div>
 </nav>
-<div>
- <FavList jobs={this.state.favs} favHandler={this.favHandler} getFoods={this.getFoods}/>
+<div style={{paddingTop: '75px'}}>
+  <FavList 
+    jobs={this.state.favs} 
+    favHandler={this.favHandler} 
+    getFoods={this.getFoods}
+  />
 </div>
 </div>
        )

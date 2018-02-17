@@ -1,10 +1,15 @@
 const axios = require('axios')
-// const {GOOGLE, YELP} = require('./config.js')
-let GOOGLE = {}
-let YELP = {}
-GOOGLE.DIRECTOINS = process.env.GOOG_DIR
-GOOGLE.GEO = process.env.GOOG_GEO
-YELP.KEY = process.env.YELP
+
+//Handle Environments
+if (process.env.PORT) {
+  var GOOGLE = {}
+  var YELP = {}
+  GOOGLE.DIRECTOINS = process.env.GOOG_DIR
+  GOOGLE.GEO = process.env.GOOG_GEO
+  YELP.KEY = process.env.YELP
+} else {
+  var {GOOGLE, YELP} = require('./config.js')
+}
 
 exports.gitHub = (location, keywords, isFulltime) => {
   let params = {}
@@ -36,8 +41,6 @@ exports.googleGeocoder = (placeId) => {
     }
   })
 }
-//google geocoder api
-  //Use location id from directions api to convert to long and lat
 
 exports.yelp = (longitude, latitude) => {
   return axios.get('https://api.yelp.com/v3/businesses/search', { 
@@ -51,29 +54,28 @@ exports.yelp = (longitude, latitude) => {
       limit: 5
     }
   });
-  //Yelp restraunts fetcher
-  //use long and lat to find near by restaraunts
 }
 
 exports.getFoods = (job) => {
   if(typeof job === 'string') job = JSON.parse(job)
+
   console.log('City/Company: ', job.company, job.location)
-  return exports.googleDirections(job.company, job.location)
+  return exports.googleDirections(job.company, job.location) //Get place id from city and company information
   .then((loc)=> {
     console.log('PlaceID: ', loc.data.geocoded_waypoints[0].place_id)
-    return exports.googleGeocoder(loc.data.geocoded_waypoints[0].place_id)
+    return exports.googleGeocoder(loc.data.geocoded_waypoints[0].place_id) //Use place id to get lng and lat
   })
   .then((place)=> {
     let location = place.data.results[0].geometry.location
     console.log('Location: ', location)
-    return exports.yelp(location.lng, location.lat)
+    return exports.yelp(location.lng, location.lat) //Use lng and lat to get yelp information
   })
   .then((foods)=> {
     console.log('Foods: ', foods.data.businesses.length)
-    return Object.assign({foods: foods.data.businesses}, job)
+    return Object.assign({foods: foods.data.businesses}, job) //Attach yelp info to jobs obj
   })
   .catch((err)=> {
     console.log('ERROR')
-    return Object.assign({foods: [{id: 0, title:'No Location Data Available'}]}, job)
+    return Object.assign({foods: [{id: 0, title:'No Location Data Available'}]}, job) //if no data, return empty yelp list
   })
 }
