@@ -3,6 +3,7 @@ import JobItem from './JobItem.jsx'
 
 const List = ({jobs, favHandler, getFoods}) => {
   return (
+  <div class="col">
   <ul>
       {jobs.map((job, i)=> {
       return <JobItem 
@@ -10,9 +11,9 @@ const List = ({jobs, favHandler, getFoods}) => {
         getFoods={getFoods} 
         job={job} 
         key={job.id}
-      />})
-    }
+      />})}
   </ul>
+  </div>
   )
 }
  

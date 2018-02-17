@@ -14,7 +14,7 @@ class App extends React.Component {
       jobs: [],
       favs: [],
       foods: [],
-      favView: false
+      favView: true
      }
      this.favHandler = this.favHandler.bind(this)
      this.searchDb = this.searchDb.bind(this)
@@ -31,7 +31,7 @@ class App extends React.Component {
   favTabHandler(val) {
     if (val) {
       this.getFavs()
-        .then(()=> this.setState({favView: val}))
+        .then((favs)=> this.setState({favView: val, favs: favs.data}))
     }
 
     else {
@@ -40,16 +40,35 @@ class App extends React.Component {
   }
 
   favHandler(job) {
-    axios.post('/favs', {job: job})
+    if (this.state.favView) {
+      console.log('delete request')
+      axios.delete('/favs', {
+        params: {
+          id: job.id
+        }
+      })
       .then(() => {
         if(this.state.favView) {
           this.getFavs()
             .then((favs)=> {
               console.log(favs)
-              this.setState({jobs: favs.data})
+              this.setState({favs: favs.data})
             })
           }
       })
+    } else {
+      console.log('post request')
+      axios.post('/favs', {job: job})
+        .then(() => {
+          if(this.state.favView) {
+            this.getFavs()
+              .then((favs)=> {
+                console.log(favs)
+                this.setState({favs: favs.data})
+              })
+            }
+        })
+    }
   }
 
   searchDb(location, keywords, isFulltime) {
@@ -61,7 +80,7 @@ class App extends React.Component {
       }
     })
     .then((data)=> {
-      this.setState({jobs: data.data},
+      this.setState({jobs: data.data, favView: false},
       console.log(this.state.jobs))
     })
   }
@@ -84,30 +103,73 @@ class App extends React.Component {
   render() { 
     if (!this.state.favView) {
       return ( 
-        <div>
-          <h1>SEARCH</h1>
-          <button onClick={()=> this.favTabHandler(false)}>Search</button>
-          <button onClick={()=> this.favTabHandler(true)}>Favs</button>
-          <Search searchDb={this.searchDb}/>
-          <pre>{JSON.stringify(this.state.jobs)}</pre>
-          <pre>{JSON.stringify(this.state.foods)}</pre>
-          <List jobs={this.state.jobs} favHandler={this.favHandler} getFoods={this.getFoods}/>
-          <Foods foods={this.state.foods}/>
-        </div>
+<div>
+<nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+<a className="navbar-brand">SEARCH</a>
+<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+  <span className="navbar-toggler-icon"></span>
+</button>
+
+<div className="collapse navbar-collapse" id="navbarColor01">
+  <ul className="navbar-nav mr-auto">
+    <li className="nav-item">
+      <a 
+        className="nav-link"
+        onClick={()=> this.favTabHandler(false)}
+      >Search</a>
+    </li>
+    <li className="nav-item">
+      <a 
+        className="nav-link"
+        onClick={()=> this.favTabHandler(true)}
+      >Favs</a>
+    </li>
+  </ul>
+  <Search searchDb={this.searchDb}/>
+</div>
+</nav>
+<div class="container">
+<div class="row">
+ <List jobs={this.state.jobs} favHandler={this.favHandler} getFoods={this.getFoods}/>
+<div class="col">
+ {this.state.jobs.length > 0 ? <Foods foods={this.state.foods}/> : <div></div>}
+</div>
+</div>
+</div>
+</div>
        )
 
     } else if (this.state.favView) {
       return ( 
-        <div>
-          <h1>FAVS</h1>
-          <button onClick={()=> this.favTabHandler(false)}>Search</button>
-          <button onClick={()=> this.favTabHandler(true)}>Favs</button>
-          <Search searchDb={this.searchDb}/>
-          {console.log(this.state.favs.data)}
-          <pre>{JSON.stringify(this.state.favs)}</pre>
-          <pre>{JSON.stringify(this.state.foods)}</pre>
-          <FavList jobs={this.state.favs} favHandler={this.favHandler} getFoods={this.getFoods}/>
-        </div>
+<div>
+<nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+<a className="navbar-brand">FAVS</a>
+<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+  <span className="navbar-toggler-icon"></span>
+</button>
+
+<div className="collapse navbar-collapse" id="navbarColor01">
+<ul className="navbar-nav mr-auto">
+    <li className="nav-item">
+      <a 
+        className="nav-link"
+        onClick={()=> this.favTabHandler(false)}
+      >Search</a>
+    </li>
+    <li className="nav-item">
+      <a 
+        className="nav-link"
+        onClick={()=> this.favTabHandler(true)}
+      >Favs</a>
+    </li>
+  </ul>
+  <Search searchDb={this.searchDb}/>
+</div>
+</nav>
+<div>
+ <FavList jobs={this.state.favs} favHandler={this.favHandler} getFoods={this.getFoods}/>
+</div>
+</div>
        )
     }
   }

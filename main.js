@@ -45,6 +45,7 @@ app.get('/favs', (req, res) => {
 })
 
 app.post('/favs', (req, res) => {
+  console.log('posting to favs')
   api.getFoods(req.body.job)
     .then((decoratedJob)=> {
       db.save(decoratedJob)

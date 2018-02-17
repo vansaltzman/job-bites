@@ -3,18 +3,24 @@ import Foods from './FoodsItem.jsx'
 
 const FavListItem = ({job, favHandler, getFoods}) => {
   return (
-  <li>
-    <div onClick={(e)=>favHandler(job)}>
-      Fav
+    <div class="container">
+      <div class="row">
+      <div class="card border-secondary mb-3" style={{'width': '33%'}}>
+        <div class="card-header">
+        <button style={{'float': 'right'}} onClick={(e)=>favHandler(job)} type="button" class="btn btn-secondary">Remove</button>
+        {job.company}
+        </div>
+        <div class="card-body">
+      <h6 class="card-title">{job.location}</h6>
+      <h4 class="card-title">{job.title}</h4>
+      <p class="card-text"><a href={job.url}>Go To GitHub Jobs</a></p>
     </div>
-    <span>{job.title}</span>
-    <span>{job.company}</span>
-    <div>
-      <a href={job.url}></a>
     </div>
-    <button onClick={(e)=> getFoods(job)}>Nearby Bites</button>
-    {/* <Foods foods={this.state.job.foods}/> */}
-  </li>
+    <div class="col">
+      <Foods foods={job.foods}/>
+    </div>
+    </div>
+    </div>
   )
 }
  
