@@ -3,17 +3,17 @@ const {GOOGLE, YELP} = require('./config.js')
 
 exports.gitHub = (location, keywords, isFulltime) => {
   let params = {}
-  if (location) data.location = location
-  if (keywords) data.description = keywords
-  if (isFulltime) data.full_time = isFulltime
+  if (location) params.location = location
+  if (keywords) params.description = keywords
+  if (isFulltime) params.full_time = isFulltime
 
-  axios.get('https://jobs.github.com/positions.json', {
+  return axios.get('https://jobs.github.com/positions.json', {
     params: params
   })
 }
 
 exports.googleDirections = (companyName, city) => {
-  axios.get('https://maps.googleapis.com/maps/api/directions/json', {
+  return axios.get('https://maps.googleapis.com/maps/api/directions/json', {
     params: {
       key: GOOGLE.DIRECTOINS,
       origin: `${companyName}  ${city}`,
@@ -23,7 +23,7 @@ exports.googleDirections = (companyName, city) => {
 }
 
 exports.googleGeocoder = (placeId) => {
-  axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
+  return axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
     params: {
       key: GOOGLE.GEO,
       place_id: placeId
@@ -34,17 +34,34 @@ exports.googleGeocoder = (placeId) => {
   //Use location id from directions api to convert to long and lat
 
 exports.yelp = (longitude, latitude) => {
-  axios.get('', { 
+  return axios.get('https://api.yelp.com/v3/businesses/search', { 
     headers: { Authorization: `Bearer ${YELP.KEY}` },
     params: {
       longitude: longitude,
       latitude: latitude,
-      term: 'lunch',
-      radius: 100,
+      term: 'food',
+      radius: 200,
       sort_by: 'rating',
       limit: 5
     }
   });
   //Yelp restraunts fetcher
   //use long and lat to find near by restaraunts
+}
+
+exports.getFoods = (job) => {
+  return exports.googleDirections(job.company, job.location)
+  .then((loc)=> {
+    return exports.googleGeocoder(loc.data.geocoded_waypoints[0].place_id)
+  })
+  .then((place)=> {
+    let location = place.data.results[0].geometry.location
+    return exports.yelp(location.lng, location.lat)
+  })
+  .then((foods)=> {
+    return Object.assign({foods: foods.data.businesses}, JSON.parse(job))
+  })
+  .catch((err)=> {
+    console.log(err)
+  })
 }

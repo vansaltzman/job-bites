@@ -4,8 +4,8 @@ const FoodsItem = ({foods}) => (
   <div>
     <ul>
     {foods.map((food)=> {
-      <li>
-        <span>{food.type}</span> 
+      return <li key={food.id}>
+        <span>{food.rating}</span> 
         {food.name} 
         <span>{food.distance}</span>
       </li>

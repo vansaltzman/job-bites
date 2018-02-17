@@ -1,11 +1,19 @@
 import React from 'react'
-import ListItem from './ListItem.jsx'
+import JobItem from './JobItem.jsx'
 
-const List = ({jobs}) => {
-  return 
-  <div>
-      {jobs.map((job, i)=> <ListItem job={job} foods={job.foods}/>)}
-  </div>
+const List = ({jobs, favHandler, getFoods}) => {
+  return (
+  <ul>
+      {jobs.map((job, i)=> {
+      return <JobItem 
+        favHandler={favHandler} 
+        getFoods={getFoods} 
+        job={job} 
+        key={job.id}
+      />})
+    }
+  </ul>
+  )
 }
  
 export default List;
