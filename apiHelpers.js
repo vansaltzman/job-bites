@@ -50,7 +50,7 @@ exports.yelp = (longitude, latitude) => {
       latitude: latitude,
       term: 'food',
       radius: 500,
-      sort_by: 'rating',
+      sort_by: 'distance',
       limit: 5
     }
   });
